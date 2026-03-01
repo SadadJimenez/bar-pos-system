@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { db, type BarTable } from '../db/database';
 import {
-    Users,
     Clock,
     Plus,
     XCircle,
     Beer,
     CircleDot,
-    Trash2
+    Trash2,
+    UserCircle
 } from 'lucide-react';
 
 interface TableModuleProps {
@@ -67,8 +67,8 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
         <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                 <div>
-                    <h2 className="text-4xl font-black font-outfit glow-text tracking-tighter uppercase">Plano de Mesas</h2>
-                    <p className="text-text-secondary text-sm font-medium mt-1 uppercase tracking-widest opacity-80">Mapa interactivo de AM LICORES</p>
+                    <h2 className="text-4xl font-black font-outfit glow-text tracking-tighter uppercase">Cuentas Activas</h2>
+                    <p className="text-text-secondary text-sm font-medium mt-1 uppercase tracking-widest opacity-80">Gestión de Clientes y Pedidos</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
@@ -87,20 +87,20 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                         </button>
                         <button
                             onClick={() => setFilter('occupied')}
-                            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'occupied' ? 'bg-danger/20 text-danger' : 'text-text-muted hover:text-white'}`}
+                            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'occupied' ? 'bg-danger/20 text-danger shadow-glow' : 'text-text-muted hover:text-white'}`}
                         >
-                            Ocupadas
+                            Ver Cuentas Creadas
                         </button>
                     </div>
 
                     <div className="hidden md:flex items-center gap-4 px-4 py-2 bg-white/2 rounded-2xl border border-white/5 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-success"></span>
-                            <span>Libre</span>
+                            <span>Nueva</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-danger"></span>
-                            <span>Ocupada</span>
+                            <span>Consumiendo</span>
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                                     <div className="flex items-center gap-1.5 mt-2">
                                         <CircleDot size={10} className={table.status === 'occupied' ? 'text-danger' : 'text-success'} />
                                         <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${table.status === 'occupied' ? 'text-danger' : 'text-success'}`}>
-                                            {table.status === 'occupied' ? 'En Servicio' : 'Disponible'}
+                                            {table.status === 'occupied' ? 'Consumiendo' : 'Por Facturar'}
                                         </span>
                                     </div>
                                 </div>
@@ -147,8 +147,8 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2 text-text-muted">
-                                        <Users size={16} />
-                                        <span className="text-[10px] font-bold uppercase tracking-widest">{table.capacity} Personas</span>
+                                        <UserCircle size={16} />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest truncate max-w-[100px]">{table.number}</span>
                                     </div>
                                     {table.status === 'occupied' && (
                                         <div className="flex items-center gap-1.5 text-danger font-black text-[10px] uppercase animate-pulse">
@@ -166,7 +166,7 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                                 ) : (
                                     <div className="flex items-center justify-center gap-2 p-3 bg-white/5 border border-white/5 group-hover:border-primary/30 rounded-xl transition-all">
                                         <Plus size={14} className="group-hover:text-primary" />
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-text-muted group-hover:text-primary">Abrir Orden</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-text-muted group-hover:text-primary">Añadir Consumo</span>
                                     </div>
                                 )}
                             </div>
@@ -190,8 +190,8 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                         <Plus size={32} />
                     </div>
                     <div className="text-center">
-                        <span className="block text-text-muted font-black text-xs uppercase tracking-widest group-hover:text-primary transition-colors">Añadir Mesa</span>
-                        <span className="text-[9px] text-text-muted/50 uppercase font-bold tracking-tighter">Nueva Ubicación</span>
+                        <span className="block text-text-muted font-black text-xs uppercase tracking-widest group-hover:text-primary transition-colors">Abrir Cuenta</span>
+                        <span className="text-[9px] text-text-muted/50 uppercase font-bold tracking-tighter">Nuevo Cliente</span>
                     </div>
                 </button>
             </div>
@@ -204,7 +204,7 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                         <div className="p-1 w-full bg-gradient-to-r from-primary to-secondary"></div>
                         <div className="p-8 space-y-6">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-2xl font-black font-outfit uppercase tracking-tight">Nueva Mesa</h3>
+                                <h3 className="text-2xl font-black font-outfit uppercase tracking-tight">Nueva Cuenta</h3>
                                 <button type="button" onClick={() => setShowAddModal(false)} className="text-text-muted hover:text-danger pb-2">
                                     <XCircle size={24} />
                                 </button>
@@ -212,11 +212,11 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
 
                             <div className="space-y-4">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-muted">Identificador / Número</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-text-muted">Nombre del Cliente / Referencia</label>
                                     <input
                                         required
                                         type="text"
-                                        placeholder="Ej: Mesa 10 o VIP 2"
+                                        placeholder="Ej: Juan Perez o Grupo Amigos"
                                         className="input h-14 bg-white/5 border-white/10 font-bold uppercase"
                                         value={formData.number}
                                         onChange={e => setFormData({ ...formData, number: e.target.value })}
@@ -235,7 +235,7 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                             </div>
 
                             <button type="submit" className="btn btn-primary w-full h-14 font-black uppercase tracking-widest shadow-glow">
-                                REGISTRAR UBICACIÓN
+                                ABRIR CUENTA
                             </button>
                         </div>
                     </form>
@@ -251,8 +251,8 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
                             <Trash2 size={40} className="animate-bounce" />
                         </div>
                         <div className="space-y-2">
-                            <h3 className="text-2xl font-black font-outfit uppercase tracking-tight">¿Eliminar Mesa?</h3>
-                            <p className="text-text-muted text-sm font-bold">Esta mesa se borrará permanentemente del plano. Solo puedes borrar mesas que no estén en servicio.</p>
+                            <h3 className="text-2xl font-black font-outfit uppercase tracking-tight">¿Eliminar Cuenta?</h3>
+                            <p className="text-text-muted text-sm font-bold">Esta cuenta de cliente se borrará permanentemente. Solo puedes borrar cuentas sin consumos activos.</p>
                         </div>
                         <div className="flex gap-3">
                             <button

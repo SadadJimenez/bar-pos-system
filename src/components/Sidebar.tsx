@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     ShoppingCart,
+    ClipboardList,
     Package,
     BarChart3,
     Users,
@@ -34,6 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     const menuItems = [
         { id: 'pos', name: 'Punto de Venta', icon: ShoppingCart, roles: ['admin', 'cashier'] },
+        { id: 'tables', name: 'Cuentas Abiertas', icon: ClipboardList, roles: ['admin', 'cashier'] },
         { id: 'inventory', name: 'Inventario', icon: Package, roles: ['admin'] },
         { id: 'reports', name: 'Reportes', icon: BarChart3, roles: ['admin'] },
         { id: 'users', name: 'Usuarios', icon: Users, roles: ['admin'] },

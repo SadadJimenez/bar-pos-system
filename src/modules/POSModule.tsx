@@ -167,7 +167,7 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                 </head>
                 <body>
                     <h1>AM LICORES</h1>
-                    <p>Mesa: ${currentTable?.number || 'Venta Rápida'}</p>
+                    <p>Cliente: ${currentTable?.number || 'Mostrador'}</p>
                     <p>Fecha: ${new Date().toLocaleString()}</p>
                     <p>Atendido por: ${currentUser.name}</p>
                     <table>
@@ -277,7 +277,7 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                         </button>
                         <div className="flex-1">
                             <h2 className="text-2xl font-bold font-outfit">
-                                {currentTable ? `Mesa ${currentTable.number}` : 'Venta Rápida'}
+                                {currentTable ? `Cliente: ${currentTable.number}` : 'Venta de Mostrador'}
                             </h2>
                             <p className="text-xs text-text-muted">Atendido por {currentUser.name}</p>
                         </div>
