@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from '../db/database';
+import { db, hashPassword } from '../db/database';
 import { Lock, User as UserIcon, ShieldCheck, Loader2, ArrowRight } from 'lucide-react';
 import LogoAM from '../components/LogoAM';
 
@@ -22,8 +22,11 @@ const LoginModule: React.FC<LoginModuleProps> = ({ onLogin }) => {
 
         try {
             const user = await db.users.where('username').equals(username.toLowerCase()).first();
+            const hashedAttempt = await hashPassword(password);
 
-            if (user && user.password === password) {
+            if (user && (user.password === hashedAttempt || user.password === password)) {
+                // If it was the plaintext for backward compat, we still let them in (so they don't lose access).
+                // Or best, simply verify if matches the hash or the raw text.
                 onLogin(user);
             } else if (username.toLowerCase() === 'admin' && password === '123') {
                 // Failsafe / Backdoor: Si la tabla de usuarios en Supabase está vacía o hubo error,
