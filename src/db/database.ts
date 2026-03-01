@@ -99,8 +99,12 @@ export const db = {
     where: (field: string) => ({
       equals: (value: any) => ({
         first: async () => {
-          const { data } = await supabase.from('users').select('*').eq(field, value).single();
-          return data;
+          const { data, error } = await supabase.from('users').select('*').eq(field, value).limit(1);
+          if (error) {
+            console.error('Supabase query error:', error);
+            return undefined;
+          }
+          return data?.[0];
         }
       })
     })
