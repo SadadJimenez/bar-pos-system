@@ -11,7 +11,9 @@ import {
     Key,
     UserCheck,
     Search,
-    Lock
+    Lock,
+    Eye,
+    EyeOff
 } from 'lucide-react';
 
 const UserModule: React.FC = () => {
@@ -27,6 +29,7 @@ const UserModule: React.FC = () => {
         role: 'cashier'
     });
     const [isSaving, setIsSaving] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         loadUsers();
@@ -300,13 +303,20 @@ const UserModule: React.FC = () => {
                                         <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-primary opacity-60" size={18} />
                                         <input
                                             required={!editingUser}
-                                            type="password"
-                                            className="input pl-12 h-14 bg-black/40 border-primary/20 font-bold tracking-widest rounded-xl focus:border-primary focus:bg-white/5 transition-all text-white placeholder-text-muted/30"
+                                            type={showPassword ? "text" : "password"}
+                                            className="input pl-12 pr-12 h-14 bg-black/40 border-primary/20 font-bold tracking-widest rounded-xl focus:border-primary focus:bg-white/5 transition-all text-white placeholder-text-muted/30"
                                             placeholder="••••••••"
                                             value={formData.password}
                                             onChange={e => setFormData({ ...formData, password: e.target.value })}
                                             disabled={isSaving}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-primary transition-colors focus:outline-none"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
