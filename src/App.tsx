@@ -4,7 +4,6 @@ import Sidebar from './components/Sidebar';
 import POSModule from './modules/POSModule';
 import InventoryModule from './modules/InventoryModule';
 import ReportsModule from './modules/ReportsModule';
-import TableModule from './modules/TableModule';
 import LoginModule from './modules/LoginModule';
 import UserModule from './modules/UserModule';
 import { Menu } from 'lucide-react';
@@ -14,8 +13,7 @@ import { ToastProvider } from './components/Toast';
 const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [activeModule, setActiveModule] = useState('tables');
-  const [activeTable, setActiveTable] = useState<number | null>(null);
+  const [activeModule, setActiveModule] = useState('pos');
   const [user, setUser] = useState<User | null>(null);
   const [isDbReady, setIsDbReady] = useState(false);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -75,18 +73,9 @@ const App: React.FC = () => {
       case 'pos': return (
         <POSModule
           currentUser={user}
-          tableId={activeTable}
+          tableId={null} // Pasamos null ya que ahora es directo a mostrador/cliente
           onClose={() => {
-            setActiveTable(null);
-            setActiveModule('tables');
-          }}
-        />
-      );
-      case 'tables': return (
-        <TableModule
-          onSelectTable={(id) => {
-            setActiveTable(id);
-            setActiveModule('pos');
+            setActiveModule('pos'); // Mantener en POS o redirigir donde consideres
           }}
         />
       );

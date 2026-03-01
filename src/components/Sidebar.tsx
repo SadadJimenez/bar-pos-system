@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    LayoutDashboard,
     ShoppingCart,
     Package,
     BarChart3,
@@ -34,8 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     userRole
 }) => {
     const menuItems = [
-        { id: 'pos', name: 'Ventas (POS)', icon: ShoppingCart, roles: ['admin', 'cashier'] },
-        { id: 'tables', name: 'Mesas', icon: LayoutDashboard, roles: ['admin', 'cashier'] },
+        { id: 'pos', name: 'Punto de Venta', icon: ShoppingCart, roles: ['admin', 'cashier'] },
         { id: 'inventory', name: 'Inventario', icon: Package, roles: ['admin'] },
         { id: 'reports', name: 'Reportes', icon: BarChart3, roles: ['admin'] },
         { id: 'users', name: 'Usuarios', icon: Users, roles: ['admin'] },
