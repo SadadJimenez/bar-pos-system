@@ -48,14 +48,19 @@ const TableModule: React.FC<TableModuleProps> = ({ onSelectTable }) => {
     };
 
     const handleDeleteTable = async (id: number) => {
-        const table = tables.find(t => t.id === id);
-        if (table?.status === 'occupied') {
-            alert('No se puede eliminar una mesa ocupada');
-            return;
+        try {
+            const table = tables.find(t => t.id === id);
+            if (table?.status === 'occupied') {
+                alert('No se puede eliminar una cuenta vinculada con un consumo activo.');
+                return;
+            }
+            await db.barTables.delete(id);
+            setShowDeleteConfirm(null);
+            loadTables();
+        } catch (error) {
+            console.error("Error al eliminar la cuenta:", error);
+            alert("Ocurrió un error al intentar eliminar la cuenta. Por favor intente de nuevo.");
         }
-        await db.barTables.delete(id);
-        setShowDeleteConfirm(null);
-        loadTables();
     };
 
     const filteredTables = tables.filter(t => {

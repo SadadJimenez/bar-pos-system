@@ -155,6 +155,8 @@ export const db = {
       if (error) throw error;
     },
     delete: async (id: number) => {
+      // Eliminamos primero las órdenes vinculadas a esta cuenta (mesa) para evitar error de llave foránea
+      await supabase.from('orders').delete().eq('tableId', id);
       const { error } = await supabase.from('barTables').delete().eq('id', id);
       if (error) throw error;
     }
