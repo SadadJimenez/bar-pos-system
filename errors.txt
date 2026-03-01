@@ -1,0 +1,15 @@
+src/App.tsx(2,24): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/ProductCard.tsx(2,10): error TS1484: 'Product' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/ProductCard.tsx(3,10): error TS6133: 'Plus' is declared but its value is never read.
+src/components/Sidebar.tsx(9,5): error TS6133: 'Settings' is declared but its value is never read.
+src/modules/InventoryModule.tsx(2,14): error TS1484: 'Product' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/LoginModule.tsx(2,10): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/POSModule.tsx(2,14): error TS1484: 'Product' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/POSModule.tsx(2,23): error TS1484: 'SaleItem' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/POSModule.tsx(2,33): error TS1484: 'User' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/POSModule.tsx(2,39): error TS1484: 'BarTable' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/POSModule.tsx(19,1): error TS6133: 'format' is declared but its value is never read.
+src/modules/ReportsModule.tsx(2,14): error TS1484: 'Sale' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/ReportsModule.tsx(4,5): error TS6133: 'BarChart3' is declared but its value is never read.
+src/modules/TableModule.tsx(2,14): error TS1484: 'BarTable' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/TableModule.tsx(5,5): error TS6133: 'Layout' is declared but its value is never read.
