@@ -26,7 +26,7 @@ const LoginModule: React.FC<LoginModuleProps> = ({ onLogin }) => {
 
         try {
             // 1. Intentar autenticación con Supabase Auth directamente (si el usuario se registró allí con correo)
-            const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+            const { data: authData } = await supabase.auth.signInWithPassword({
                 email: username,
                 password: password,
             });
