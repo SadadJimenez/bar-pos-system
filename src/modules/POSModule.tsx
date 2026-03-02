@@ -227,53 +227,58 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
     };
 
     const handleFinishSale = async (method: 'cash' | 'card' | 'transfer' | 'nequi' | 'daviplata' | 'bancolombia' | 'other_bank') => {
-        const sale = {
-            timestamp: new Date(),
-            userId: currentUser.id!,
-            userName: currentUser.name,
-            total: cartTotal,
-            discount: discount,
-            paymentMethod: method,
-            items: cart,
-            splitCount: splitCount
-        };
+        try {
+            const sale = {
+                timestamp: new Date().toISOString(),
+                userId: currentUser.id!,
+                userName: currentUser.name,
+                total: cartTotal,
+                discount: discount,
+                paymentMethod: method,
+                items: cart,
+                splitCount: splitCount
+            };
 
-        await db.sales.add(sale);
+            await db.sales.add(sale as any);
 
-        // Actualizar orden exisente a PAGADA
-        if (tableId) {
-            const order = await db.orders.where('tableId').equals(tableId).and(o => o.status !== 'paid').first();
-            if (order) {
-                await db.orders.update(order.id!, { status: 'paid' });
-            }
-            await db.barTables.update(tableId, { status: 'available' });
-        }
-
-        // Descontar inventario
-        for (const item of cart) {
-            const product = products.find(p => p.id === item.productId);
-            if (product) {
-                let reduction = item.quantity;
-                if (item.type === 'shot' && product.shotsPerBottle) {
-                    reduction = item.quantity / product.shotsPerBottle;
+            // Actualizar orden exisente a PAGADA
+            if (tableId) {
+                const order = await db.orders.where('tableId').equals(tableId).and(o => o.status !== 'paid').first();
+                if (order) {
+                    await db.orders.update(order.id!, { status: 'paid' });
                 }
-
-                await db.products.update(product.id!, {
-                    stock: Math.max(0, product.stock - reduction)
-                });
+                await db.barTables.update(tableId, { status: 'available' });
             }
-        }
 
-        setCart([]);
-        setDiscount(0);
-        setSplitCount(1);
-        setShowPaymentModal(false);
-        setPaymentMode('main');
-        showToast('¡Venta realizada con éxito!', 'success');
-        if (tableId) {
-            onClose();
-        } else {
-            loadProducts();
+            // Descontar inventario
+            for (const item of cart) {
+                const product = products.find(p => p.id === item.productId);
+                if (product) {
+                    let reduction = item.quantity;
+                    if (item.type === 'shot' && product.shotsPerBottle) {
+                        reduction = item.quantity / product.shotsPerBottle;
+                    }
+
+                    await db.products.update(product.id!, {
+                        stock: Math.max(0, product.stock - reduction)
+                    });
+                }
+            }
+
+            setCart([]);
+            setDiscount(0);
+            setSplitCount(1);
+            setShowPaymentModal(false);
+            setPaymentMode('main');
+            showToast('¡Venta realizada con éxito!', 'success');
+            if (tableId) {
+                onClose();
+            } else {
+                loadProducts();
+            }
+        } catch (err: any) {
+            console.error('Error in handleFinishSale:', err);
+            alert(`Error guardando venta: ${err?.message || JSON.stringify(err)}`);
         }
     };
 
