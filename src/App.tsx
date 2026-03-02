@@ -5,7 +5,6 @@ import POSModule from './modules/POSModule';
 import InventoryModule from './modules/InventoryModule';
 import ReportsModule from './modules/ReportsModule';
 import TableModule from './modules/TableModule';
-import CashModule from './modules/CashModule';
 import LoginModule from './modules/LoginModule';
 import UserModule from './modules/UserModule';
 import { Menu } from 'lucide-react';
@@ -93,7 +92,6 @@ const App: React.FC = () => {
       );
       case 'inventory': return <InventoryModule />;
       case 'reports': return <ReportsModule />;
-      case 'cash': return <CashModule currentUser={user} />;
       case 'users': return <UserModule />;
       default: return (
         <POSModule
