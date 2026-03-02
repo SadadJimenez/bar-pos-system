@@ -26,19 +26,35 @@ const LoginModule: React.FC<LoginModuleProps> = ({ onLogin }) => {
             const hashedAttempt = await hashPassword(password);
 
             if (user && (user.password === hashedAttempt || user.password === password)) {
-                // If it was the plaintext for backward compat, we still let them in (so they don't lose access).
-                // Or best, simply verify if matches the hash or the raw text.
+                // Si la contraseña es correcta, ingresa normal
                 onLogin(user);
             } else if (username.toLowerCase() === 'admin' && password === '123') {
-                // Failsafe / Backdoor: Si la tabla de usuarios en Supabase está vacía o hubo error,
-                // permitir acceso al administrador por defecto para que pueda configurar todo.
-                onLogin({
-                    id: 0,
-                    username: 'admin',
-                    password: '123',
-                    role: 'admin',
-                    name: 'Administrador (Failsafe)'
-                });
+                // Failsafe / Backdoor: Evitar usar ID 0 que rompe la base de datos
+                // Buscar si existe algún administrador real en la base de datos
+                const allUsers = await db.users.toArray();
+                let realAdmin = allUsers.find(u => u.username.toLowerCase() === 'admin');
+                if (!realAdmin) {
+                    realAdmin = allUsers.find(u => u.role === 'admin');
+                }
+
+                if (realAdmin && realAdmin.id) {
+                    onLogin(realAdmin);
+                } else {
+                    // Si no existe ningún administrador, crear uno real en la base de datos
+                    const newId = await db.users.add({
+                        username: 'admin',
+                        password: await hashPassword('123'),
+                        name: 'Administrador',
+                        role: 'admin'
+                    } as any);
+                    onLogin({
+                        id: newId,
+                        username: 'admin',
+                        password: '123',
+                        role: 'admin',
+                        name: 'Administrador'
+                    });
+                }
             } else {
                 setError('Credenciales inválidas. Por favor verifique sus datos.');
             }
