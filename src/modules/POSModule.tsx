@@ -17,12 +17,13 @@ import {
     ArrowLeft,
     Save,
     Landmark
+} from 'lucide-react';
 
 interface POSProps {
-        currentUser: User;
-        tableId: number | null;
-        onClose: () => void;
-    }
+    currentUser: User;
+    tableId: number | null;
+    onClose: () => void;
+}
 
 const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
     const [products, setProducts] = useState<Product[]>([]);
