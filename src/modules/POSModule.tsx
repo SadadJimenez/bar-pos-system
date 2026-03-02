@@ -157,12 +157,21 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                 <head>
                     <title>Ticket - AM LICORES</title>
                     <style>
-                        body { font-family: 'Courier New', Courier, monospace; width: 300px; padding: 20px; }
-                        h1 { text-align: center; font-size: 1.2rem; margin-bottom: 5px; }
-                        p { font-size: 0.8rem; margin: 2px 0; }
-                        table { width: 100%; border-top: 1px dashed #000; margin-top: 10px; }
-                        th { text-align: left; }
-                        .total { border-top: 1px dashed #000; margin-top: 10px; font-weight: bold; }
+                        @page { margin: 0; }
+                        body { 
+                            font-family: 'Courier New', Courier, monospace; 
+                            width: 58mm; /* Configurado para impresoras térmicas de 58mm */
+                            margin: 0;
+                            padding: 5mm; 
+                            font-size: 11px;
+                        }
+                        h1 { text-align: center; font-size: 14px; margin: 0 0 5px 0; }
+                        p { margin: 2px 0; }
+                        table { width: 100%; border-top: 1px dashed #000; margin-top: 5px; border-collapse: collapse; }
+                        th { text-align: left; padding: 2px 0; border-bottom: 1px dashed #000; font-size: 10px; }
+                        td { padding: 2px 0; font-size: 11px; }
+                        .total { border-top: 1px dashed #000; margin-top: 5px; padding-top: 5px; font-weight: bold; font-size: 12px; }
+                        .ticket-footer { text-align: center; margin-top: 10px; font-size: 10px; }
                     </style>
                 </head>
                 <body>
@@ -181,7 +190,10 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                     <div class="total">
                         <p>Total: $${cartTotal.toLocaleString()}</p>
                     </div>
-                    <p style="text-align:center; margin-top: 20px;">¡Gracias por su visita!</p>
+                    <div class="ticket-footer">
+                        <p>¡Gracias por su visita!</p>
+                        <p>AM LICORES</p>
+                    </div>
                 </body>
             </html>
         `;

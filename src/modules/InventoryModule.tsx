@@ -9,7 +9,8 @@ import {
     Edit2,
     Trash2,
     Search,
-    X
+    X,
+    TrendingDown
 } from 'lucide-react';
 
 const InventoryModule: React.FC = () => {
@@ -19,6 +20,8 @@ const InventoryModule: React.FC = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [categoryFilter, setCategoryFilter] = useState<string>('Todos');
+    const [showWasteModal, setShowWasteModal] = useState<Product | null>(null);
+    const [wasteData, setWasteData] = useState({ quantity: 1, reason: '' });
     const { showToast } = useToast();
 
     // Form state
@@ -60,6 +63,35 @@ const InventoryModule: React.FC = () => {
         setShowDeleteConfirm(null);
         loadProducts();
         showToast('Producto eliminado', 'success');
+    };
+
+    const handleRegisterWaste = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!showWasteModal) return;
+
+        try {
+            // Registrar Merma
+            await db.waste.add({
+                productId: showWasteModal.id!,
+                productName: showWasteModal.name,
+                quantity: wasteData.quantity,
+                reason: wasteData.reason,
+                timestamp: new Date()
+            });
+
+            // Descontar del inventario
+            await db.products.update(showWasteModal.id!, {
+                stock: Math.max(0, showWasteModal.stock - wasteData.quantity)
+            });
+
+            showToast('Merma registrada y stock actualizado', 'warning');
+            setShowWasteModal(null);
+            setWasteData({ quantity: 1, reason: '' });
+            loadProducts();
+        } catch (error) {
+            console.error(error);
+            showToast('Error al registrar merma', 'error');
+        }
     };
 
     const categories = ['Todos', 'Cervezas', 'Licores', 'Cocteles', 'Bebidas sin alcohol', 'Snacks'];
@@ -243,6 +275,16 @@ const InventoryModule: React.FC = () => {
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+                                                    setShowWasteModal(p);
+                                                }}
+                                                className="p-2 hover:bg-white/10 rounded-lg text-text-secondary hover:text-warning"
+                                                title="Registrar Merma"
+                                            >
+                                                <TrendingDown size={16} />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
                                                     setShowDeleteConfirm(p.id!);
                                                 }}
                                                 className="p-2 hover:bg-white/10 rounded-lg text-text-secondary hover:text-danger"
@@ -406,6 +448,49 @@ const InventoryModule: React.FC = () => {
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Modal de Mermas */}
+            {showWasteModal && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowWasteModal(null)}></div>
+                    <form onSubmit={handleRegisterWaste} className="card w-full max-w-sm relative z-10 p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-bold font-outfit uppercase flex items-center gap-2 text-warning">
+                                <TrendingDown size={20} /> Registrar Merma
+                            </h3>
+                        </div>
+                        <p className="text-xs text-text-muted">Se descontará del inventario de <b>{showWasteModal.name}</b></p>
+
+                        <div>
+                            <label className="text-[10px] uppercase font-bold text-text-muted">Cantidad a descontar</label>
+                            <input
+                                required
+                                type="number"
+                                step="0.01"
+                                className="input h-12"
+                                value={wasteData.quantity}
+                                onChange={e => setWasteData({ ...wasteData, quantity: Number(e.target.value) })}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] uppercase font-bold text-text-muted">Motivo / Causa</label>
+                            <input
+                                required
+                                type="text"
+                                placeholder="Ej: Botella rota, Degustación, Caducidad..."
+                                className="input h-12"
+                                value={wasteData.reason}
+                                onChange={e => setWasteData({ ...wasteData, reason: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="flex gap-2 pt-4">
+                            <button type="button" onClick={() => setShowWasteModal(null)} className="btn bg-white/5 flex-1 py-3 text-xs">CANCELAR</button>
+                            <button type="submit" className="btn bg-warning text-black font-black flex-1 py-3 text-xs shadow-glow">APLICAR MERMA</button>
+                        </div>
+                    </form>
                 </div>
             )}
         </div>

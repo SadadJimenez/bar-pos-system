@@ -51,9 +51,10 @@ export interface Sale {
 
 export interface CashControl {
   id?: number;
-  type: 'open' | 'close';
+  type: 'open' | 'close' | 'expense' | 'income';
   timestamp: Date | string;
   userId: number;
+  userName?: string;
   amount: number;
   notes?: string;
 }
@@ -215,6 +216,16 @@ export const db = {
     },
     add: async (cc: CashControl) => {
       const { error } = await supabase.from('cashControl').insert(cc);
+      if (error) throw error;
+    }
+  },
+  waste: {
+    toArray: async () => {
+      const { data } = await supabase.from('waste').select('*').order('timestamp', { ascending: false });
+      return data || [];
+    },
+    add: async (waste: Waste) => {
+      const { error } = await supabase.from('waste').insert(waste);
       if (error) throw error;
     }
   }
