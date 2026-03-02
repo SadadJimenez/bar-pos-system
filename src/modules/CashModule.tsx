@@ -68,18 +68,24 @@ const CashModule: React.FC<CashModuleProps> = ({ currentUser }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="card bg-success/10 border-success/20 flex flex-col gap-2 relative overflow-hidden">
-                    <div className="absolute top-4 right-4 text-success/20"><ArrowUpRight size={80} /></div>
+                <div className="card bg-success/5 border-success/20 flex flex-col justify-center gap-1 relative overflow-hidden p-6 h-36">
+                    <div className="absolute -right-6 -bottom-6 text-success/10 pointer-events-none transform -rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowUpRight size={140} strokeWidth={1} /></div>
+                    <div className="z-10 flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-success/10 rounded-lg"><ArrowUpRight size={18} className="text-success" /></div>
+                        <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Total Ingresos / Base</p>
+                    </div>
                     <div className="z-10">
-                        <p className="text-xs text-text-secondary uppercase">Total Ingresos / Base</p>
-                        <p className="text-3xl font-bold font-outfit text-success">{formatCOP(totalIncome)}</p>
+                        <p className="text-4xl font-bold font-outfit text-success drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">{formatCOP(totalIncome)}</p>
                     </div>
                 </div>
-                <div className="card bg-danger/10 border-danger/20 flex flex-col gap-2 relative overflow-hidden">
-                    <div className="absolute top-4 right-4 text-danger/20"><ArrowDownRight size={80} /></div>
+                <div className="card bg-danger/5 border-danger/20 flex flex-col justify-center gap-1 relative overflow-hidden p-6 h-36">
+                    <div className="absolute -right-6 -bottom-6 text-danger/10 pointer-events-none transform rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowDownRight size={140} strokeWidth={1} /></div>
+                    <div className="z-10 flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-danger/10 rounded-lg"><ArrowDownRight size={18} className="text-danger" /></div>
+                        <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Total Egresos</p>
+                    </div>
                     <div className="z-10">
-                        <p className="text-xs text-text-secondary uppercase">Total Egresos</p>
-                        <p className="text-3xl font-bold font-outfit text-danger">{formatCOP(totalExpense)}</p>
+                        <p className="text-4xl font-bold font-outfit text-danger drop-shadow-[0_0_15px_rgba(239,68,68,0.3)]">{formatCOP(totalExpense)}</p>
                     </div>
                 </div>
             </div>
