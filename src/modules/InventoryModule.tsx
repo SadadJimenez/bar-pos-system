@@ -76,7 +76,7 @@ const InventoryModule: React.FC = () => {
                 productName: showWasteModal.name,
                 quantity: wasteData.quantity,
                 reason: wasteData.reason,
-                timestamp: new Date()
+                timestamp: new Date().toISOString()
             });
 
             // Descontar del inventario
@@ -88,8 +88,9 @@ const InventoryModule: React.FC = () => {
             setShowWasteModal(null);
             setWasteData({ quantity: 1, reason: '' });
             loadProducts();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Waste submit error:', error);
+            alert(`Error al registrar merma: ${error?.message || JSON.stringify(error)}`);
             showToast('Error al registrar merma', 'error');
         }
     };

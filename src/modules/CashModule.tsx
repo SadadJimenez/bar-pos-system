@@ -29,7 +29,7 @@ const CashModule: React.FC<CashModuleProps> = ({ currentUser }) => {
         try {
             await db.cashControl.add({
                 type,
-                timestamp: new Date(),
+                timestamp: new Date().toISOString(),
                 userId: currentUser.id!,
                 userName: currentUser.name,
                 amount,
@@ -40,8 +40,9 @@ const CashModule: React.FC<CashModuleProps> = ({ currentUser }) => {
             setAmount(0);
             setNotes('');
             loadRecords();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Save error details:', error);
+            alert(`Error al guardar: ${error?.message || JSON.stringify(error)}`);
             showToast('Error al guardar el registro', 'error');
         }
     };
