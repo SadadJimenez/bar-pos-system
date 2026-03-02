@@ -210,10 +210,18 @@ const ReportsModule: React.FC = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded text-[9px] font-black uppercase ${s.paymentMethod === 'cash' ? 'bg-success/10 text-success' :
-                                                s.paymentMethod === 'card' ? 'bg-secondary/10 text-secondary' :
-                                                    'bg-primary/10 text-primary'
+                                                    s.paymentMethod === 'card' ? 'bg-secondary/10 text-secondary' :
+                                                        s.paymentMethod === 'nequi' ? 'bg-[#e31855]/10 text-[#e31855]' :
+                                                            s.paymentMethod === 'daviplata' ? 'bg-[#d81e05]/10 text-[#d81e05]' :
+                                                                s.paymentMethod === 'bancolombia' ? 'bg-[#fdc616]/10 text-[#fdc616]' :
+                                                                    'bg-primary/10 text-primary'
                                                 }`}>
-                                                {s.paymentMethod === 'cash' ? 'Efectivo' : s.paymentMethod === 'card' ? 'Tarjeta' : 'Transferencia'}
+                                                {s.paymentMethod === 'cash' ? 'Efect.' :
+                                                    s.paymentMethod === 'card' ? 'Tarj.' :
+                                                        s.paymentMethod === 'nequi' ? 'Nequi' :
+                                                            s.paymentMethod === 'daviplata' ? 'DaviPl' :
+                                                                s.paymentMethod === 'bancolombia' ? 'Bancol' :
+                                                                    'Transf.'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
@@ -243,32 +251,38 @@ const ReportsModule: React.FC = () => {
                         </div>
                         <div className="space-y-6">
                             {[
-                                { method: 'cash', label: 'Efectivo', color: 'success' },
-                                { method: 'card', label: 'Tarjeta', color: 'secondary' },
-                                { method: 'transfer', label: 'Transferencia', color: 'primary' }
-                            ].map(item => {
-                                const amount = sales.filter(s => s.paymentMethod === item.method).reduce((acc, s) => acc + s.total, 0);
-                                const percent = stats.totalRevenue > 0 ? (amount / stats.totalRevenue) * 100 : 0;
-                                return (
-                                    <div key={item.method} className="group">
-                                        <div className="flex justify-between items-end mb-2">
-                                            <div>
-                                                <p className="text-[9px] uppercase font-bold text-text-muted tracking-wide">{item.label}</p>
-                                                <p className="text-lg font-bold font-outfit text-text-primary tracking-tight">{formatCOP(amount)}</p>
+                                { method: 'cash', label: 'Efectivo', colorText: 'text-success', colorBg: 'bg-success' },
+                                { method: 'card', label: 'Tarjeta', colorText: 'text-secondary', colorBg: 'bg-secondary' },
+                                { method: 'transfer', label: 'Transferencia Gral', colorText: 'text-primary', colorBg: 'bg-primary' },
+                                { method: 'nequi', label: 'Nequi', colorText: 'text-[#e31855]', colorBg: 'bg-[#e31855]' },
+                                { method: 'daviplata', label: 'Daviplata', colorText: 'text-[#d81e05]', colorBg: 'bg-[#d81e05]' },
+                                { method: 'bancolombia', label: 'Bancolombia', colorText: 'text-[#fdc616]', colorBg: 'bg-[#fdc616]' },
+                                { method: 'other_bank', label: 'Otro Banco', colorText: 'text-primary', colorBg: 'bg-primary' }
+                            ]
+                                .filter(item => sales.some(s => s.paymentMethod === item.method))
+                                .map(item => {
+                                    const amount = sales.filter(s => s.paymentMethod === item.method).reduce((acc, s) => acc + s.total, 0);
+                                    const percent = stats.totalRevenue > 0 ? (amount / stats.totalRevenue) * 100 : 0;
+                                    return (
+                                        <div key={item.method} className="group">
+                                            <div className="flex justify-between items-end mb-2">
+                                                <div>
+                                                    <p className="text-[9px] uppercase font-bold text-text-muted tracking-wide">{item.label}</p>
+                                                    <p className="text-lg font-bold font-outfit text-text-primary tracking-tight">{formatCOP(amount)}</p>
+                                                </div>
+                                                <span className={`text-[10px] font-bold ${item.colorText}`}>
+                                                    {Math.round(percent)}%
+                                                </span>
                                             </div>
-                                            <span className={`text-[10px] font-bold text-${item.color}`}>
-                                                {Math.round(percent)}%
-                                            </span>
+                                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full transition-all duration-700 ${item.colorBg} shadow-[0_0_8px_rgba(0,0,0,0.5)]`}
+                                                    style={{ width: `${percent}%` }}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                            <div
-                                                className={`h-full transition-all duration-700 bg-${item.color} shadow-[0_0_8px_rgba(0,0,0,0.5)]`}
-                                                style={{ width: `${percent}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
                         </div>
                     </div>
 

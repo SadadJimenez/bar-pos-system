@@ -15,14 +15,14 @@ import {
     Receipt,
     ShoppingCart,
     ArrowLeft,
-    Save
-} from 'lucide-react';
+    Save,
+    Landmark
 
 interface POSProps {
-    currentUser: User;
-    tableId: number | null;
-    onClose: () => void;
-}
+        currentUser: User;
+        tableId: number | null;
+        onClose: () => void;
+    }
 
 const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -34,6 +34,7 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
     const [discount, setDiscount] = useState(0);
     const [splitCount, setSplitCount] = useState(1);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [paymentMode, setPaymentMode] = useState<'main' | 'transfer'>('main');
     const { showToast } = useToast();
 
     useEffect(() => {
@@ -224,7 +225,7 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
         onClose();
     };
 
-    const handleFinishSale = async (method: 'cash' | 'card' | 'transfer') => {
+    const handleFinishSale = async (method: 'cash' | 'card' | 'transfer' | 'nequi' | 'daviplata' | 'bancolombia' | 'other_bank') => {
         const sale = {
             timestamp: new Date(),
             userId: currentUser.id!,
@@ -266,6 +267,7 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
         setDiscount(0);
         setSplitCount(1);
         setShowPaymentModal(false);
+        setPaymentMode('main');
         showToast('¡Venta realizada con éxito!', 'success');
         if (tableId) {
             onClose();
@@ -462,7 +464,10 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                             </button>
                         )}
                         <button
-                            onClick={() => setShowPaymentModal(true)}
+                            onClick={() => {
+                                setPaymentMode('main');
+                                setShowPaymentModal(true);
+                            }}
                             className="btn btn-primary w-full py-4 text-lg shadow-glow"
                             disabled={cart.length === 0}
                         >
@@ -481,44 +486,96 @@ const POSModule: React.FC<POSProps> = ({ currentUser, tableId, onClose }) => {
                         <p className="text-center text-text-muted">Total: <span className="text-primary font-bold">${cartTotal.toLocaleString()}</span></p>
 
                         <div className="grid gap-4">
-                            <button
-                                onClick={() => handleFinishSale('cash')}
-                                className="flex items-center gap-4 p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
-                            >
-                                <div className="w-12 h-12 bg-success/20 text-success rounded-xl flex items-center justify-center">
-                                    <Banknote />
-                                </div>
-                                <div className="text-left">
-                                    <p className="font-bold">Efectivo</p>
-                                    <p className="text-xs text-text-muted">Pago en moneda local</p>
-                                </div>
-                            </button>
+                            {paymentMode === 'main' ? (
+                                <>
+                                    <button
+                                        onClick={() => handleFinishSale('cash')}
+                                        className="flex items-center gap-4 p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
+                                    >
+                                        <div className="w-12 h-12 bg-success/20 text-success rounded-xl flex items-center justify-center">
+                                            <Banknote />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-bold">Efectivo</p>
+                                            <p className="text-xs text-text-muted">Pago en moneda local</p>
+                                        </div>
+                                    </button>
 
-                            <button
-                                onClick={() => handleFinishSale('card')}
-                                className="flex items-center gap-4 p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
-                            >
-                                <div className="w-12 h-12 bg-secondary/20 text-secondary rounded-xl flex items-center justify-center">
-                                    <CreditCard />
-                                </div>
-                                <div className="text-left">
-                                    <p className="font-bold">Tarjeta Débito/Crédito</p>
-                                    <p className="text-xs text-text-muted">Visa, Mastercard, etc.</p>
-                                </div>
-                            </button>
+                                    <button
+                                        onClick={() => handleFinishSale('card')}
+                                        className="flex items-center gap-4 p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
+                                    >
+                                        <div className="w-12 h-12 bg-secondary/20 text-secondary rounded-xl flex items-center justify-center">
+                                            <CreditCard />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-bold">Tarjeta Débito/Crédito</p>
+                                            <p className="text-xs text-text-muted">Datáfono, Redeban, etc.</p>
+                                        </div>
+                                    </button>
 
-                            <button
-                                onClick={() => handleFinishSale('transfer')}
-                                className="flex items-center gap-4 p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
-                            >
-                                <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center">
-                                    <Smartphone />
-                                </div>
-                                <div className="text-left">
-                                    <p className="font-bold">Transferencia</p>
-                                    <p className="text-xs text-text-muted">Nequi, Daviplata, Bancos</p>
-                                </div>
-                            </button>
+                                    <button
+                                        onClick={() => setPaymentMode('transfer')}
+                                        className="flex items-center justify-between p-5 bg-bg-surface-light hover:bg-white/5 border border-white/5 rounded-2xl transition-all"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center">
+                                                <Smartphone />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="font-bold">Transferencias</p>
+                                                <p className="text-xs text-text-muted">Nequi, Daviplata, Bancolombia</p>
+                                            </div>
+                                        </div>
+                                        <ChevronRight className="text-text-muted" />
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button onClick={() => setPaymentMode('main')} className="text-left text-xs text-text-muted flex items-center gap-1 hover:text-white w-fit px-2 py-1 -ml-2 mb-2"><ArrowLeft size={14} /> Volver atrás</button>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <button
+                                            onClick={() => handleFinishSale('nequi')}
+                                            className="flex flex-col items-center gap-2 p-4 bg-bg-surface-light hover:bg-[#e31855]/20 border border-white/5 hover:border-[#e31855] rounded-2xl transition-all group"
+                                        >
+                                            <div className="w-10 h-10 bg-[#e31855]/10 text-[#e31855] rounded-xl flex items-center justify-center">
+                                                <Smartphone size={20} />
+                                            </div>
+                                            <p className="font-bold text-xs">Nequi</p>
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleFinishSale('daviplata')}
+                                            className="flex flex-col items-center gap-2 p-4 bg-bg-surface-light hover:bg-[#d81e05]/20 border border-white/5 hover:border-[#d81e05] rounded-2xl transition-all group"
+                                        >
+                                            <div className="w-10 h-10 bg-[#d81e05]/10 text-[#d81e05] rounded-xl flex items-center justify-center">
+                                                <Smartphone size={20} />
+                                            </div>
+                                            <p className="font-bold text-xs">Daviplata</p>
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleFinishSale('bancolombia')}
+                                            className="flex flex-col items-center gap-2 p-4 bg-bg-surface-light hover:bg-[#fdc616]/20 border border-white/5 hover:border-[#fdc616] rounded-2xl transition-all group"
+                                        >
+                                            <div className="w-10 h-10 bg-[#fdc616]/10 text-[#fdc616] rounded-xl flex items-center justify-center">
+                                                <Landmark size={20} />
+                                            </div>
+                                            <p className="font-bold text-xs text-center leading-tight">Bancolombia</p>
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleFinishSale('other_bank')}
+                                            className="flex flex-col items-center gap-2 p-4 bg-bg-surface-light hover:bg-white/10 border border-white/5 rounded-2xl transition-all"
+                                        >
+                                            <div className="w-10 h-10 bg-white/5 text-white rounded-xl flex items-center justify-center">
+                                                <Landmark size={20} />
+                                            </div>
+                                            <p className="font-bold text-xs text-center leading-tight">Otro Banco</p>
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         <button

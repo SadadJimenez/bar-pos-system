@@ -44,7 +44,7 @@ export interface Sale {
   userName: string;
   total: number;
   discount: number;
-  paymentMethod: 'cash' | 'card' | 'transfer';
+  paymentMethod: 'cash' | 'card' | 'transfer' | 'nequi' | 'daviplata' | 'bancolombia' | 'other_bank';
   items: SaleItem[];
   splitCount: number;
 }
