@@ -69,7 +69,7 @@ const CashModule: React.FC<CashModuleProps> = ({ currentUser }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="card bg-success/5 border-success/20 flex flex-col justify-center gap-1 relative overflow-hidden p-6 h-36">
-                    <div className="absolute -right-6 -bottom-6 text-success/10 pointer-events-none transform -rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowUpRight size={140} strokeWidth={1} /></div>
+                    <div className="absolute -right-6 -bottom-6 text-success opacity-10 pointer-events-none transform -rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowUpRight size={140} strokeWidth={1} /></div>
                     <div className="z-10 flex items-center gap-2 mb-2">
                         <div className="p-2 bg-success/10 rounded-lg"><ArrowUpRight size={18} className="text-success" /></div>
                         <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Total Ingresos / Base</p>
@@ -79,7 +79,7 @@ const CashModule: React.FC<CashModuleProps> = ({ currentUser }) => {
                     </div>
                 </div>
                 <div className="card bg-danger/5 border-danger/20 flex flex-col justify-center gap-1 relative overflow-hidden p-6 h-36">
-                    <div className="absolute -right-6 -bottom-6 text-danger/10 pointer-events-none transform rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowDownRight size={140} strokeWidth={1} /></div>
+                    <div className="absolute -right-6 -bottom-6 text-danger opacity-10 pointer-events-none transform rotate-12 transition-transform duration-500 hover:rotate-0"><ArrowDownRight size={140} strokeWidth={1} /></div>
                     <div className="z-10 flex items-center gap-2 mb-2">
                         <div className="p-2 bg-danger/10 rounded-lg"><ArrowDownRight size={18} className="text-danger" /></div>
                         <p className="text-xs font-bold text-text-secondary uppercase tracking-widest">Total Egresos</p>
